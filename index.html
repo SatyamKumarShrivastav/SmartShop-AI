@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartShop AI — Personalized product recommendations and sales trend predictions powered by machine learning.">
+  <title>SmartShop AI — Personalized Recommendations &amp; Sales Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div id="auth-screen" class="auth-screen" style="display:none"></div>
+
+<!-- App Loader -->
+<div id="app-loader" class="app-loader hidden">
+  <div class="loader-content">
+    <div class="loader-logo">
+      <span class="loader-icon">✦</span>
+      <span class="loader-brand">SmartShop AI</span>
+    </div>
+    <div class="loader-bar"><div class="loader-progress"></div></div>
+    <p class="loader-text">Initializing AI Recommendation Engine...</p>
+  </div>
+</div>
+
+<!-- Main App -->
+<div id="app" class="app hidden">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">✦</span>
+      <span class="logo-text">SmartShop<span class="logo-accent">AI</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-view="home" id="nav-home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+      <a href="#" class="nav-item" data-view="catalog" id="nav-catalog"><span class="nav-icon">🛍️</span><span class="nav-label">Catalog</span></a>
+      <a href="#" class="nav-item" data-view="analytics" id="nav-analytics"><span class="nav-icon">📊</span><span class="nav-label">Analytics</span></a>
+      <a href="#" class="nav-item" data-view="profile" id="nav-profile"><span class="nav-icon">👤</span><span class="nav-label">Profile</span></a>
+      <a href="#" class="nav-item nav-admin-only hidden" data-view="admin" id="nav-admin"><span class="nav-icon">🛡️</span><span class="nav-label">Admin Panel</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="ai-badge"><span class="ai-dot"></span><span>AI Engine Active</span></div>
+      <button class="logout-btn" id="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-wrapper">
+    <!-- Network Share Banner -->
+    <div id="network-banner" class="network-banner hidden">
+      <span>🌐 Share this link to open on other devices:</span>
+      <a id="network-url" href="#" target="_blank" class="net-url">Loading…</a>
+      <button onclick="copyNetworkUrl()" class="copy-net-btn">📋 Copy</button>
+      <button onclick="document.getElementById('network-banner').classList.add('hidden')" class="net-close">✕</button>
+    </div>
+
+    <!-- Top Bar -->
+    <header id="top-bar" class="top-bar">
+      <div class="top-bar-left">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search" class="search-input" placeholder="Search products, categories, tags...">
+        </div>
+      </div>
+      <div class="top-bar-right">
+        <div class="welcome-chip" id="welcome-chip">👋 Welcome!</div>
+        <button class="icon-btn" id="share-btn" title="Share network link">🌐</button>
+        <button class="icon-btn user-only-btn" id="cart-btn">🛒 <span class="badge" id="cart-count">0</span></button>
+        <button class="icon-btn" id="notification-btn">🔔 <span class="badge notification-badge" id="notif-count">3</span></button>
+      </div>
+    </header>
+
+    <!-- Views -->
+    <main id="views-container" class="views-container">
+
+      <!-- ═══ HOME VIEW ═══ -->
+      <div id="view-home" class="view active">
+        <section class="hero-section">
+          <div class="hero-content">
+            <div class="hero-badge"><span class="pulse-dot"></span>AI-Powered Recommendations</div>
+            <h1 class="hero-title">Hello, <span id="hero-username" class="gradient-text">Friend</span> 👋</h1>
+            <p id="hero-subtitle" class="hero-subtitle">Discover products curated just for you by our intelligent hybrid recommendation engine</p>
+            <div class="hero-stats">
+              <div class="hero-stat"><span class="hero-stat-value">6</span><span class="hero-stat-label">For You</span></div>
+              <div class="hero-stat"><span class="hero-stat-value">94%</span><span class="hero-stat-label">Accuracy</span></div>
+              <div class="hero-stat"><span class="hero-stat-value">30</span><span class="hero-stat-label">Products</span></div>
+            </div>
+            <button class="btn btn-primary" onclick="navigate('catalog')">Browse Catalog →</button>
+          </div>
+          <div class="hero-visual">
+            <div class="hero-orb"></div>
+            <div class="floating-card card-1"><span>🎧</span> Top Pick <div class="fc-score">98% match</div></div>
+            <div class="floating-card card-2"><span>📈</span> Sales +24% <div class="fc-score">This month</div></div>
+            <div class="floating-card card-3"><span>🤖</span> AI Active <div class="fc-score">Learning...</div></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">✨ Recommended For You</h2>
+              <p class="section-subtitle">Powered by collaborative filtering &amp; content-based analysis</p>
+            </div>
+            <div class="algo-badges">
+              <span class="algo-badge">Collaborative</span>
+              <span class="algo-badge">Content-Based</span>
+              <span class="algo-badge">Hybrid AI</span>
+            </div>
+          </div>
+          <div id="recommendations-grid" class="product-grid"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <div><h2 class="section-title">🔥 Trending Now</h2><p class="section-subtitle">Most purchased products this week</p></div>
+            <button class="btn btn-outline" onclick="navigate('catalog')">View All</button>
+          </div>
+          <div id="trending-grid" class="product-grid"></div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <div><h2 class="section-title">💡 You May Also Like</h2><p class="section-subtitle">Based on your browsing history</p></div>
+          </div>
+          <div id="also-like-grid" class="product-grid"></div>
+        </section>
+      </div>
+
+      <!-- ═══ CATALOG VIEW ═══ -->
+      <div id="view-catalog" class="view">
+        <div class="catalog-header">
+          <h1 class="page-title">Product Catalog</h1>
+          <p class="page-subtitle">30 products across 6 categories — sorted by AI recommendation score</p>
+        </div>
+        <div class="catalog-layout">
+          <aside class="filter-sidebar">
+            <div class="filter-header"><h3>Filters</h3><button class="btn-link" id="clear-filters">Clear All</button></div>
+            <div class="filter-group">
+              <span class="filter-label">Category</span>
+              <div id="category-filters" class="filter-options"></div>
+            </div>
+            <div class="filter-group">
+              <span class="filter-label">Price Range</span>
+              <div class="price-range">
+                <input type="range" id="price-min" min="0" max="700" value="0" class="range-input">
+                <input type="range" id="price-max" min="0" max="700" value="700" class="range-input">
+                <div class="price-labels"><span id="price-min-label">$0</span><span id="price-max-label">$700</span></div>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span class="filter-label">Min Rating</span>
+              <div class="rating-filter" id="rating-filter">
+                <button class="rating-btn active" data-rating="0">All</button>
+                <button class="rating-btn" data-rating="3">3+ ⭐</button>
+                <button class="rating-btn" data-rating="4">4+ ⭐</button>
+                <button class="rating-btn" data-rating="4.5">4.5+ ⭐</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <span class="filter-label">Sort By</span>
+              <select id="sort-select" class="filter-select">
+                <option value="default">Recommended</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="sales">Best Selling</option>
+              </select>
+            </div>
+          </aside>
+          <div class="catalog-content">
+            <div class="catalog-toolbar">
+              <span id="result-count" class="result-count">30 products found</span>
+              <div class="view-toggle">
+                <button class="view-btn active" id="grid-view-btn" title="Grid view">⊞</button>
+                <button class="view-btn" id="list-view-btn" title="List view">☰</button>
+              </div>
+            </div>
+            <div id="catalog-grid" class="product-grid catalog-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ ANALYTICS VIEW ═══ -->
+      <div id="view-analytics" class="view">
+        <div class="analytics-header">
+          <h1 class="page-title">Sales Analytics</h1>
+          <p class="page-subtitle">12-month historical data + 6-month AI forecast via Linear Regression</p>
+        </div>
+        <div id="kpi-grid" class="kpi-grid"></div>
+        <div class="charts-row">
+          <div class="chart-card" style="min-height:380px">
+            <div class="chart-header">
+              <div><h3 class="chart-title">Revenue Trend &amp; AI Forecast</h3><p class="chart-subtitle">Historical + 6-month ML prediction (Linear Regression)</p></div>
+              <div class="forecast-legend"><span class="legend-item historical">● Historical</span><span class="legend-item predicted">● AI Forecast</span></div>
+            </div>
+            <canvas id="revenue-chart"></canvas>
+          </div>
+        </div>
+        <div class="charts-row two-col">
+          <div class="chart-card" style="min-height:340px">
+            <div class="chart-header"><div><h3 class="chart-title">Sales by Category</h3><p class="chart-subtitle">Monthly stacked breakdown</p></div></div>
+            <canvas id="category-chart"></canvas>
+          </div>
+          <div class="chart-card" style="min-height:340px">
+            <div class="chart-header"><div><h3 class="chart-title">Revenue Distribution</h3><p class="chart-subtitle">Share by category</p></div></div>
+            <canvas id="donut-chart"></canvas>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header"><h3>🏆 Top Performing Products</h3></div>
+          <table class="top-products-table">
+            <thead><tr><th>#</th><th>Product</th><th>Category</th><th>Units Sold</th><th>Revenue</th><th>Trend</th></tr></thead>
+            <tbody id="top-products-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ═══ PROFILE VIEW ═══ -->
+      <div id="view-profile" class="view">
+        <div class="catalog-header">
+          <h1 class="page-title">User Profile</h1>
+          <p class="page-subtitle">Your personalized shopping profile</p>
+        </div>
+        <div id="profile-container"></div>
+      </div>
+
+      <!-- ═══ ADMIN VIEW ═══ -->
+      <div id="view-admin" class="view"></div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div id="checkout-modal" class="checkout-modal"></div>
+
+<!-- Product Modal -->
+<div id="product-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="modal-close-btn" id="modal-close">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Scripts (order matters) -->
+<script src="js/auth.js"></script>
+<script src="js/data.js"></script>
+<script src="js/recommendation.js"></script>
+<script src="js/prediction.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/checkout.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
